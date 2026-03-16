@@ -1,33 +1,40 @@
 import os
 import time
+import logging
 
 class PACSServer:
 
-    def __init__(self, storage_path="data"):
-        self.storage_path = storage_path
-        os.makedirs(storage_path, exist_ok=True)
+    def __init__(self, storage="data"):
+        self.storage = storage
+        os.makedirs(storage, exist_ok=True)
 
-    def store_image(self, image_name, content):
-        start = time.time()
-
-        path = os.path.join(self.storage_path, image_name)
-
-        with open(path, "w") as f:
-            f.write(content)
-
-        end = time.time()
-
-        return end - start
-
-    def retrieve_image(self, image_name):
+    def store_dicom(self, dicom_file):
 
         start = time.time()
 
-        path = os.path.join(self.storage_path, image_name)
+        filename = os.path.basename(dicom_file)
 
-        with open(path) as f:
+        dest = os.path.join(self.storage, filename)
+
+        with open(dicom_file, "rb") as src:
+            with open(dest, "wb") as dst:
+                dst.write(src.read())
+
+        duration = time.time() - start
+
+        logging.info(f"Stored {filename} in {duration}")
+
+        return duration
+
+    def retrieve_dicom(self, filename):
+
+        start = time.time()
+
+        path = os.path.join(self.storage, filename)
+
+        with open(path, "rb") as f:
             data = f.read()
 
-        end = time.time()
+        duration = time.time() - start
 
-        return data, end - start
+        return data, duration

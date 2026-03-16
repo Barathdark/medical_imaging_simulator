@@ -1,0 +1,7 @@
+pydicom
+pandas
+numpy
+openpyxl
+PyQt5
+matplotlib
+pytest

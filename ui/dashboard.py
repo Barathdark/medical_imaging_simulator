@@ -8,9 +8,9 @@ class Dashboard(QWidget):
 
         self.controller = controller
 
-        self.label = QLabel("Medical Imaging Load Simulator")
+        self.label = QLabel("MedLoadSim - PACS Performance Tester")
 
-        self.button = QPushButton("Start Simulation")
+        self.button = QPushButton("Run Simulation")
 
         self.button.clicked.connect(self.run_test)
 

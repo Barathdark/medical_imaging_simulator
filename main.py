@@ -3,8 +3,10 @@ import sys
 from PyQt5.QtWidgets import QApplication
 
 from core.pacs_server import PACSServer
-from simulator.load_simulator import LoadSimulator
-from analytics.performance_analyzer import PerformanceAnalyzer
+from core.dicom_manager import DICOMManager
+from simulator.device_simulator import DeviceSimulator
+from simulator.load_engine import LoadEngine
+from analytics.metrics_engine import MetricsEngine
 from analytics.report_generator import ReportGenerator
 from ui.dashboard import Dashboard
 
@@ -15,13 +17,17 @@ class Controller:
 
         pacs = PACSServer()
 
-        simulator = LoadSimulator(pacs)
+        dicom = DICOMManager()
 
-        results = simulator.simulate_load(100)
+        device = DeviceSimulator(pacs, dicom)
 
-        analyzer = PerformanceAnalyzer()
+        engine = LoadEngine(device)
 
-        metrics, df = analyzer.analyze(results)
+        results = engine.run_load(200)
+
+        metrics_engine = MetricsEngine()
+
+        metrics, df = metrics_engine.compute(results)
 
         report = ReportGenerator()
 
